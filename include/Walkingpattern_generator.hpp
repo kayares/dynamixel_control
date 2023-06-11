@@ -77,7 +77,7 @@ public:
     Y_Com();
     void Change_Ref_Ypos(double a, double b, double c, double d, double e, double f);
     MatrixXd YComSimulation();
-
+    MatrixXd YComSimulation_sidewalk();
 
 };
 class Foot
@@ -129,6 +129,14 @@ private:
     double LL_th_FK[6] = { 0.,0.,0.,0.,0.,0. }, LL_PR_FK[6] = { 0.,0.,0.,0.,0.,0. };
     double Foot_Height = 0;
 
+    double walkfreq;
+    double walktime;
+    double stride;
+    double freq;
+    double del_t;
+    double sim_time;
+    int sim_n;
+
 public:
     BRP_Inverse_Kinematics();
     void BRP_RL_FK(double th[6], double PR[6]);
@@ -136,8 +144,8 @@ public:
     void BRP_RL_IK(double REF_RL_RP[6], double Init_th[6], double IK_th[6]);
     void BRP_LL_IK(double Ref_LL_RP[6], double Init_th[6], double IK_th[6]);
     void inv_mat6(int m, int n, double Mat4[][4], double Mat6[][6], double c_inv4[4][4], double c_inv[6][6]);
-    MatrixXd BRP_RL_Simulation(MatrixXd relRFx, MatrixXd RFy, MatrixXd RFz);
-    MatrixXd BRP_LL_Simulation(MatrixXd relLFx, MatrixXd LFy, MatrixXd LFz);
+    MatrixXd BRP_RL_Simulation(MatrixXd RFx, MatrixXd RFy, MatrixXd RFz);
+    MatrixXd BRP_LL_Simulation(MatrixXd RFx, MatrixXd RFy, MatrixXd RFz);
 };
 class Motions {
 private:
@@ -157,6 +165,14 @@ private:
     MatrixXd Motion6_RL;
     MatrixXd Motion6_LL;
     double L0 = 0.045;
+    double walkfreq;
+    double walktime;
+    double stride;
+    double freq;
+    double del_t;
+    double sim_time;
+    int sim_n;
+
 
 public:
 

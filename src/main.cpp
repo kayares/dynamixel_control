@@ -48,13 +48,13 @@ int main(int argc, char **argv)
         indext += 1;
         A[0] = callback.RL_motion(indext,0);
         A[1] = callback.RL_motion(indext,1)- 5 / DEG2RAD;
-        A[2] = callback.RL_motion(indext,2)-15.4 / DEG2RAD;
+        A[2] = callback.RL_motion(indext,2)-18.4 / DEG2RAD;
         A[3] = -callback.RL_motion(indext,3)+24.58 / DEG2RAD;
         A[4] = -callback.RL_motion(indext,4)+24.22 / DEG2RAD;
         A[5] = callback.RL_motion(indext,5);
         A[6] = callback.LL_motion(indext,0);
         A[7] = callback.LL_motion(indext,1)+  5 / DEG2RAD;
-        A[8] = -callback.LL_motion(indext,2)+15.4 / DEG2RAD;
+        A[8] = -callback.LL_motion(indext,2)+18.4 / DEG2RAD;
         A[9] = callback.LL_motion(indext,3)-24.58 / DEG2RAD;
         A[10] = callback.LL_motion(indext,4) -24.22 / DEG2RAD;
         A[11] = callback.LL_motion(indext,5);
