@@ -117,8 +117,8 @@ class Dxl
         dynamixel::PacketHandler* packetHandler;
         
         // const uint8_t dxl_id[NUMBER_OF_DYNAMIXELS] = {1,2,3,4,5,6,7,8,9,10,11,12}; //그냥
-        // const uint8_t dxl_id[NUMBER_OF_DYNAMIXELS] = {10,8,6,4,2,0,11,9,7,5,3,1}; //로봇
-        const uint8_t dxl_id[NUMBER_OF_DYNAMIXELS] = {10,6,8,4,2,0,11,7,9,5,3,1}; //민섭로봇
+        const uint8_t dxl_id[NUMBER_OF_DYNAMIXELS] = {10,8,6,4,2,0,11,9,7,5,3,1}; //로봇
+        // const uint8_t dxl_id[NUMBER_OF_DYNAMIXELS] = {10,6,8,4,2,0,11,7,9,5,3,1}; //민섭로봇
         // const uint8_t dxl_id[NUMBER_OF_DYNAMIXELS] = { 0 };
         float zero_manual_offset[NUMBER_OF_DYNAMIXELS] = { 0 };
         uint32_t position[NUMBER_OF_DYNAMIXELS] = { 0 };
