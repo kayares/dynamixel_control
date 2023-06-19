@@ -36,29 +36,52 @@ int main(int argc, char **argv)
     VectorXd A(12);
 
     dxl.initActuatorValues();
-    motion.Motion4();
-    MatrixXd RL_Motion = motion.Return_Motion4_RL();
-    MatrixXd LL_Motion = motion.Return_Motion4_LL();
     callback.MotionMaker();
+    FILE* file1 = fopen("/home/jaemin/matlab_codes/fordebugdgree/motion1.dat","w");
+    FILE* file2 = fopen("/home/jaemin/matlab_codes/fordebugdgree/motion3.dat","w");
+    motion.Motion7();
+    MatrixXd motion1 = motion.Return_Motion7_LL();
+    motion.Motion3();
+    MatrixXd motion3 = motion.Return_Motion3_LL();
+    for (int i = 1; i < motion1.rows(); i++)
+    {
+        fprintf(file1,"%d ", i );
+        for (int j = 0; j < 5; j++)
+        {
+            fprintf(file1, "%lf ", motion1(i, j));
+        }
+        fprintf(file1, "%lf\n", motion1(i, 5));
+    }
+    for (int i = 1; i < motion3.rows(); i++)
+    {
+        fprintf(file2, "%d ", i);
 
+        for (int j = 0; j < 5; j++)
+        {
+            fprintf(file2, "%lf ", motion3(i, j));
+        }
+        fprintf(file2, "%lf\n", motion3(i, 5));
+    }
     int indext = 0;
+
     while (ros::ok())
     {
         //About motion
-        indext += 1;
-        A[0] = callback.RL_motion(indext,0);
-        A[1] = callback.RL_motion(indext,1)- 5 / DEG2RAD;
-        A[2] = callback.RL_motion(indext,2)-18.4 / DEG2RAD;
-        A[3] = -callback.RL_motion(indext,3)+24.58 / DEG2RAD;
-        A[4] = -callback.RL_motion(indext,4)+24.22 / DEG2RAD;
-        A[5] = callback.RL_motion(indext,5);
-        A[6] = callback.LL_motion(indext,0);
-        A[7] = callback.LL_motion(indext,1)+  5 / DEG2RAD;
-        A[8] = -callback.LL_motion(indext,2)+18.4 / DEG2RAD;
-        A[9] = callback.LL_motion(indext,3)-24.58 / DEG2RAD;
-        A[10] = callback.LL_motion(indext,4) -24.22 / DEG2RAD;
-        A[11] = callback.LL_motion(indext,5);
-
+        indext = 506;
+         indext = 709;
+         indext += 1;
+        A[0] = callback.RL_motion(indext, 0);
+        A[1] = callback.RL_motion(indext, 1) - 2 * DEG2RAD;
+        A[2] = callback.RL_motion(indext, 2) - 24.22 * DEG2RAD;
+        A[3] = -callback.RL_motion(indext, 3) + 24.58 * DEG2RAD;
+        A[4] = -callback.RL_motion(indext, 4) + 24.22 * DEG2RAD;
+        A[5] = -callback.RL_motion(indext, 5);
+        A[6] = callback.LL_motion(indext, 0);
+        A[7] = callback.LL_motion(indext, 1);
+        A[8] = -callback.LL_motion(indext, 2) + 24.22 * DEG2RAD;
+        A[9] = callback.LL_motion(indext, 3) - 24.58 * DEG2RAD;
+        A[10] = callback.LL_motion(indext, 4) - 24.22 * DEG2RAD;
+        A[11] = -callback.LL_motion(indext, 5);
         if (indext >= callback.RL_motion.rows()-1)
             {indext = 0;}
 
@@ -90,7 +113,6 @@ int main(int argc, char **argv)
     // dxl.~Dxl();
     return 0;
 }
-
 
 
 

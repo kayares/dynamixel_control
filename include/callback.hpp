@@ -46,6 +46,8 @@ public:
   MatrixXd LL_motion5;
   MatrixXd RL_motion6;
   MatrixXd LL_motion6;
+  MatrixXd RL_motion7;
+  MatrixXd LL_motion7;
 };
 
 #endif // CALLBACK_H

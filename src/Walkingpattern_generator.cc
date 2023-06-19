@@ -8,11 +8,11 @@ using namespace std;
 Com::Com()
 {
 	walkfreq = 1.48114;
-	walktime = 1 / walkfreq;
+	walktime = 2 / walkfreq;
 	stride = 0.1;
-	freq = 500;
+	freq = 300;
 	del_t = 1 / freq;
-	z_c = 1.2 * 0.30583;
+	z_c = 0.229944;
 	g = 9.81;
 	T_prev = 1.5;
 	NL = T_prev * freq;
@@ -44,10 +44,10 @@ Com::Com()
 	A_p = Matrix4d::Identity();
 	A_p.block<4, 3>(0, 1) = F_p;
 
-	K_p << 198.633829737069,	19628.3822432368,	3818.23902165455,	4.21279595103775,
-		19628.3822432368,	1989741.22570983,	387263.130714345,	466.908230988326,
-		3818.23902165455,	387263.130714345,	75375.0546442415,	91.2815487187198,
-		4.21279595103775,	466.908230988326,	91.2815487187198,	0.190908542883096;
+	K_p << 96.9578051700522,	4651.92908911014,	721.567804521901,	1.43488290614864,
+		4651.92908911014,	234570.492930090,	36458.3579050500,	83.6851804207428,
+		721.567804521901,	36458.3579050500,	5667.74464781418,	13.1918377188132,
+		1.43488290614864,	83.6851804207428,	13.1918377188132,	0.0601179774186053;
 
 	Gi = (R + B_p.transpose() * K_p * B_p).inverse() * B_p.transpose() * K_p * I_p;
 	Gx = (R + B_p.transpose() * K_p * B_p).inverse() * B_p.transpose() * K_p * F_p;
@@ -240,78 +240,11 @@ MatrixXd Y_Com::YComSimulation() {
 	return YCom;
 }
 
-MatrixXd Y_Com::YComSimulation_sidewalk() {
-	PreviewGd();
-	RowVectorXd zmp_ref(sim_n);
-	for (int i = 0; i < sim_n; i++) {
-		double time = i * del_t;
-		if (time < 1 * walktime) {
-			zmp_ref[i] = 0;
-		}
-		else if (time < 1.5 * walktime) {
-			zmp_ref[i] = Ref_Ypos[0];
-		}
-		else if (time < 2 * walktime) {
-			zmp_ref[i] = Ref_Ypos[1];
-		}
-		else if (time < 2.5 * walktime) {
-			zmp_ref[i] = Ref_Ypos[2];
-		}
-		else if (time < 3 * walktime) {
-			zmp_ref[i] = Ref_Ypos[3];
-		}
-		else if (time < 3.5 * walktime) {
-			zmp_ref[i] = Ref_Ypos[4];
-		}
-		else if (time < 4 * walktime) {
-			zmp_ref[i] = Ref_Ypos[5];
-		}
-		else
-			zmp_ref[i] = Ref_Ypos[5];
-	}
-	RowVectorXd zmp_ref_fifo(NL);
-	RowVectorXd u(sim_n);
-	RowVectorXd zmp(sim_n);
-	RowVectorXd zmp_ref_final(sim_n);
-	RowVectorXd CP(sim_n);
-	MatrixXd YCom(3, sim_n + 1);
-	YCom = MatrixXd::Zero(3, sim_n + 1);
-	double w = sqrt(g / z_c);
-	for (int i = 0; i < sim_n; i++) {
-		for (int j = 0; j < NL; j++) {
-			if (i + j < sim_n) {
-				zmp_ref_fifo[j] = zmp_ref[i + j];
-			}
-			else {
-				zmp_ref_fifo[j] = zmp_ref[sim_n - 1];
-			}
-		}
-		u_prev = 0;
-		for (int j = 0; j < NL; j++) {
-			u_prev += Gd(j, 0) * zmp_ref_fifo[j];
-		}
-		u[i] = Gi * zmp_err_int - Gx * YCom.col(i) + u_prev;
-
-		YCom.col(i + 1) = A * YCom.col(i) + B * u[i];
-
-		zmp[i] = C * YCom.col(i);
-
-		zmp_err_int += (zmp_ref[i] - zmp[i]);
-
-		CP[i] = YCom(0, i) + 1 / w * YCom(1, i);
-
-		zmp_ref_final[i] = zmp_ref[i];
-
-	}
-	this->YCom = YCom;
-	return YCom;
-}
-
 Foot::Foot() {
 	walkfreq = 1.48114;
-	walktime = 1 / walkfreq;
+	walktime = 2 / walkfreq;
 	step = 0.1;
-	freq = 500;
+	freq = 300;
 	XStep << 0, 0, 0, 0, 0, 0;
 	XStride << 0, 0, 0, 0, 0, 0;
 };
@@ -813,9 +746,9 @@ MatrixXd Foot::LF_zsimulation_rightwalk() {
 BRP_Inverse_Kinematics::BRP_Inverse_Kinematics() {
 
 	walkfreq = 1.48114;
-	walktime = 1 / walkfreq;
+	walktime = 2 / walkfreq;
 	stride = 0.1;
-	freq = 500;
+	freq = 300;
 	del_t = 1 / freq;
 	sim_time = 5 * walktime;
 	sim_n = sim_time * freq;
@@ -837,14 +770,14 @@ BRP_Inverse_Kinematics::BRP_Inverse_Kinematics() {
 
 	Ref_RL_PR[0] = 40.;
 	Ref_RL_PR[1] = -L0;
-	Ref_RL_PR[2] = -L1 - L2 - L3 - L4 - L5 - L6 + 40.;
+	Ref_RL_PR[2] = -L1 - L2 - L3 - L4 - L5 - L6 + 30.;
 	Ref_RL_PR[3] = 0 * deg2rad;
 	Ref_RL_PR[4] = 0 * deg2rad;
 	Ref_RL_PR[5] = 0 * deg2rad;
 
 	Ref_LL_PR[0] = 40.;
 	Ref_LL_PR[1] = L0;
-	Ref_LL_PR[2] = -L1 - L2 - L3 - L4 - L5 - L6 + 40.;
+	Ref_LL_PR[2] = -L1 - L2 - L3 - L4 - L5 - L6 + 30.;
 	Ref_LL_PR[3] = 0 * deg2rad;
 	Ref_LL_PR[4] = 0 * deg2rad;
 	Ref_LL_PR[5] = 0 * deg2rad;
@@ -1247,9 +1180,9 @@ MatrixXd BRP_Inverse_Kinematics::BRP_RL_Simulation(MatrixXd RFx, MatrixXd RFy, M
 	MatrixXd RL = MatrixXd::Zero(sim_n,6);
 	for (Index_CNT = 0; Index_CNT < sim_n; Index_CNT++) {
 		int i = 0;
-		Ref_RL_PR[0] = 40 + 1000 * RFx(0, Index_CNT);
+		Ref_RL_PR[0] = 1000 * RFx(0, Index_CNT);
 		Ref_RL_PR[1] = 1000 * RFy(0, Index_CNT);
-		Ref_RL_PR[2] = -L1 - L2 - L3 - L4 - L5 - L6 + 40. + 1000 * RFz(0, Index_CNT);
+		Ref_RL_PR[2] = -L1 - L2 - L3 - L4 - L5 - L6 + 30. + 1000 * RFz(0, Index_CNT);
 		Ref_RL_PR[3] = 0 * deg2rad;
 		Ref_RL_PR[4] = 0 * deg2rad;
 		Ref_RL_PR[5] = 0 * deg2rad;
@@ -1285,9 +1218,9 @@ MatrixXd BRP_Inverse_Kinematics::BRP_LL_Simulation(MatrixXd LFx, MatrixXd LFy, M
 	for (Index_CNT = 0; Index_CNT < sim_n; Index_CNT++) {  
 		int i = 0;
 
-		Ref_LL_PR[0] = 40 + 1000 * LFx(0, Index_CNT);
+		Ref_LL_PR[0] = 1000 * LFx(0, Index_CNT);
 		Ref_LL_PR[1] = 1000 * LFy(0, Index_CNT);
-		Ref_LL_PR[2] = -L1 - L2 - L3 - L4 - L5 - L6 + 40. + 1000 * LFz(0, Index_CNT);
+		Ref_LL_PR[2] = -L1 - L2 - L3 - L4 - L5 - L6 + 30. + 1000 * LFz(0, Index_CNT);
 		Ref_LL_PR[3] = 0 * deg2rad;
 		Ref_LL_PR[4] = 0 * deg2rad;
 		Ref_LL_PR[5] = 0 * deg2rad;
@@ -1321,9 +1254,9 @@ MatrixXd BRP_Inverse_Kinematics::BRP_LL_Simulation(MatrixXd LFx, MatrixXd LFy, M
 //Motions constructor
 Motions::Motions() {
 	walkfreq = 1.48114;
-	walktime = 1 / walkfreq;
+	walktime = 2 / walkfreq;
 	stride = 0.1;
-	freq = 500;
+	freq = 300;
 	del_t = 1 / freq;
 	sim_time = 5 * walktime;
 	sim_n = sim_time * freq;
@@ -1360,7 +1293,7 @@ void Motions::Motion1() {
 	Foot Foot;
 	XCOM.Change_Ref_Xpos(0, 0.1, 0.2, 0.3, 0.4, 0.5);
 	MatrixXd Xcom = XCOM.XComSimulation();
-	YCOM.Change_Ref_Ypos(0.045, -0.045, 0.045, -0.045, 0.045, 0);
+	YCOM.Change_Ref_Ypos(0.06, -0.06, 0.06, -0.06, 0.06, -0.06);
 	MatrixXd Ycom = YCOM.YComSimulation();
 	Foot.Change_step(0.1);
 	MatrixXd LF_xFoot = Foot.LF_xsimulation_straightwalk();
@@ -1374,8 +1307,8 @@ void Motions::Motion1() {
 	MatrixXd relativeRFy = RF_yFoot.block(0, 0, RF_yFoot.rows(), sim_n) - Ycom.block(0, 0, RF_yFoot.rows(), sim_n);
 	MatrixXd relativeLFy = LF_yFoot.block(0, 0, LF_yFoot.rows(), sim_n) - Ycom.block(0, 0, LF_yFoot.rows(), sim_n);
 	BRP_Inverse_Kinematics joint;
-	this->Motion1_RL = joint.BRP_RL_Simulation(relativeRFx, relativeRFy, RF_zFoot);
-	this->Motion1_LL = joint.BRP_LL_Simulation(relativeLFx, relativeLFy, LF_zFoot);
+	this->Motion1_RL =  RL_Angle_Compensation(joint.BRP_RL_Simulation(relativeRFx, relativeRFy, RF_zFoot));
+	this->Motion1_LL =  LL_Angle_Compensation(joint.BRP_LL_Simulation(relativeLFx, relativeLFy, LF_zFoot));
 }
 MatrixXd Motions::Return_Motion1_RL() {
 	return Motion1_RL;
@@ -1388,7 +1321,7 @@ void Motions::Motion2() {
 	Y_Com YCOM;
 	Foot Foot;
 	YCOM.Change_Ref_Ypos(0, -L0, 2 * L0, 0, 3 * L0, 2 * L0);
-	MatrixXd Ycom = YCOM.YComSimulation_sidewalk();
+	MatrixXd Ycom = YCOM.YComSimulation();
 	Foot.Change_step(L0);
 	MatrixXd RF_yFoot = Foot.RF_ysimulation_leftwalk();
 	MatrixXd LF_yFoot = Foot.LF_ysimulation_leftwalk();
@@ -1412,7 +1345,7 @@ MatrixXd Motions::Return_Motion2_LL() {
 void Motions::Motion3() {
 	Foot Foot;
 	Y_Com YCOM;
-	YCOM.Change_Ref_Ypos(0.045, -0.045, 0.045, -0.045, 0.045, 0);
+	YCOM.Change_Ref_Ypos(0.06, -0.06, 0.06, -0.06, 0.06, -0.06);
 	MatrixXd Ycom = YCOM.YComSimulation();
 	MatrixXd RF_yFoot = -L0 * MatrixXd::Ones(1, sim_n);
 	MatrixXd LF_yFoot = L0 * MatrixXd::Ones(1, sim_n);
@@ -1423,8 +1356,8 @@ void Motions::Motion3() {
 	MatrixXd relativeRFy = RF_yFoot - Ycom.block(0, 0, RF_yFoot.rows(), sim_n);
 	MatrixXd relativeLFy = LF_yFoot - Ycom.block(0, 0, LF_yFoot.rows(), sim_n);
 	BRP_Inverse_Kinematics joint;
-	this->Motion3_RL = joint.BRP_RL_Simulation(relativeRFx, relativeRFy, RF_zFoot);
-	this->Motion3_LL = joint.BRP_LL_Simulation(relativeLFx, relativeLFy, LF_zFoot);
+	this->Motion3_RL = RL_Angle_Compensation(joint.BRP_RL_Simulation(relativeRFx, relativeRFy, RF_zFoot));
+	this->Motion3_LL = LL_Angle_Compensation(joint.BRP_LL_Simulation(relativeLFx, relativeLFy, LF_zFoot));
 }
 MatrixXd Motions::Return_Motion3_RL() {
 	return Motion3_RL;
@@ -1438,7 +1371,7 @@ void Motions::Motion4() {
 	Y_Com YCOM;
 	Foot Foot;
 	YCOM.Change_Ref_Ypos(0, L0, -2 * L0, 0, -3 * L0, -2 * L0);
-	MatrixXd Ycom = YCOM.YComSimulation_sidewalk();
+	MatrixXd Ycom = YCOM.YComSimulation();
 	Foot.Change_step(-L0);
 	MatrixXd RF_yFoot = Foot.RF_ysimulation_rightwalk();
 	MatrixXd LF_yFoot = Foot.LF_ysimulation_rightwalk();
@@ -1466,7 +1399,7 @@ void Motions::Motion5() {
 	Foot Foot;
 	XCOM.Change_Ref_Xpos(0, -0.1, -0.2, -0.3, -0.4, -0.5);
 	MatrixXd Xcom = XCOM.XComSimulation();
-	YCOM.Change_Ref_Ypos(0, -0.045, 0.045, -0.045, 0.045, 0);
+	YCOM.Change_Ref_Ypos(0, -0.06, 0.06, -0.06, 0.06, 0);
 	MatrixXd Ycom = YCOM.YComSimulation();
 	Foot.Change_step(-0.1);
 	MatrixXd LF_xFoot = Foot.LF_xsimulation_straightwalk();
@@ -1491,13 +1424,14 @@ MatrixXd Motions::Return_Motion5_LL() {
 	return Motion5_LL;
 };
 
-void Motions::Motion6() {
+void Motions::Motion6()
+{
 	X_Com XCOM;
 	Y_Com YCOM;
 	Foot Foot;
 	XCOM.Change_Ref_Xpos(0, 0, 0, 0, 0, 0);
 	MatrixXd Xcom = XCOM.XComSimulation();
-	YCOM.Change_Ref_Ypos(0.045, -0.045, 0.045, -0.045, 0.045, -0.045);
+	YCOM.Change_Ref_Ypos(0.06, -0.06, 0.06, -0.06, 0.06, -0.06);
 	MatrixXd Ycom = YCOM.YComSimulation();
 	Foot.Change_step(0);
 	MatrixXd LF_xFoot = Foot.LF_xsimulation_straightwalk();
@@ -1521,5 +1455,256 @@ MatrixXd Motions::Return_Motion6_LL() {
 	return Motion6_LL;
 };
 
+MatrixXd Motions::RL_Angle_Compensation(MatrixXd RL)
+{
+	Foot equationsolver;
+	this->Compensation_Support_Leg1 = equationsolver.Equation_solver(0, walktime * 0.1, 0, 6 * deg2rad);
+	this->Compensation_Support_Leg2 = equationsolver.Equation_solver(0, walktime * 0.1, 6 * deg2rad, 0);
+	this->Compensation_Swing_Leg1 = equationsolver.Equation_solver(0, walktime * 0.1, 0, 10.058 * deg2rad);
+	this->Compensation_Swing_Leg2 = equationsolver.Equation_solver(0, walktime * 0.1, 10.058 * deg2rad, 0);
+
+	for (int i = 0; i < sim_n; i++)
+	{
+		double time = i * del_t;
+
+		if (1.05 * walktime < time && time < 1.15 * walktime) // swing
+		{
+			RL(i, 1) = RL(i, 1) - Swing_Leg_Compensation1(time - 1.05 * walktime);
+		}
+		else if (1.15 * walktime < time && time < 1.35 * walktime)
+		{
+			RL(i, 1) = RL(i, 1) - 10.058 * deg2rad;
+		}
+		else if (1.35 * walktime < time && time < 1.45 * walktime)
+		{
+			RL(i, 1) = RL(i, 1) - Swing_Leg_Compensation2(time - 1.35 * walktime);
+		}
+		else if (1.55 * walktime < time && time < 1.65 * walktime) // support
+		{
+			RL(i, 1) = RL(i, 1) - Support_Leg_Compensation1(time - 1.55 * walktime);
+			RL(i, 5) = RL(i, 5) - Support_Leg_Compensation1(time - 1.55 * walktime);
+		}
+		else if (1.65 * walktime < time && time < 1.85 * walktime) // support
+		{
+			RL(i, 1) = RL(i, 1) - 6 * deg2rad;
+			RL(i, 5) = RL(i, 5) - 6 * deg2rad;
+		}
+		else if (1.85 * walktime < time && time < 1.95 * walktime) // support
+		{
+			RL(i, 1) = RL(i, 1) - Support_Leg_Compensation2(time - 1.65 * walktime);
+			RL(i, 5) = RL(i, 5) - Support_Leg_Compensation2(time - 1.65 * walktime);
+		}
+		else if (2.05 * walktime < time && time < 2.15 * walktime)
+		{
+			RL(i, 1) = RL(i, 1) - Swing_Leg_Compensation1(time - 2.05 * walktime);
+		}
+
+		else if (2.15 * walktime < time && time < 2.35 * walktime)
+		{
+			RL(i, 1) = RL(i, 1) - 10.058 * deg2rad;
+		}
+
+		else if (2.35 * walktime < time && time < 2.45 * walktime)
+		{
+			RL(i, 1) = RL(i, 1) - Swing_Leg_Compensation2(time - 2.35 * walktime);
+		}
+
+		else if (2.55 * walktime < time && time < 2.65 * walktime)
+		{
+			RL(i, 1) = RL(i, 1) - Support_Leg_Compensation1(time - 2.55 * walktime);
+			RL(i, 5) = RL(i, 5) - Support_Leg_Compensation1(time - 2.55 * walktime);
+		}
+		else if (2.65 * walktime < time && time < 2.85 * walktime)
+		{
+			RL(i, 1) = RL(i, 1) - 6 * deg2rad;
+			RL(i, 5) = RL(i, 5) - 6 * deg2rad;
+		}
+		else if (2.85 * walktime < time && time < 2.95 * walktime)
+		{
+			RL(i, 1) = RL(i, 1) - Support_Leg_Compensation2(time - 2.85 * walktime);
+			RL(i, 5) = RL(i, 5) - Support_Leg_Compensation2(time - 2.85 * walktime);
+		}
+		else if (3.05 * walktime < time && time < 3.15 * walktime)
+		{
+			RL(i, 1) = RL(i, 1) - Swing_Leg_Compensation1(time - 3.05 * walktime);
+		}
+
+		else if (3.15 * walktime < time && time < 3.35 * walktime)
+		{
+			RL(i, 1) = RL(i, 1) - 10.058 * deg2rad;
+		}
+
+		else if (3.35 * walktime < time && time < 3.45 * walktime)
+		{
+			RL(i, 1) = RL(i, 1) - Swing_Leg_Compensation2(time - 3.35 * walktime);
+		}
+
+		else if (3.55 * walktime < time && time < 3.65 * walktime)
+		{
+			RL(i, 1) = RL(i, 1) - Support_Leg_Compensation1(time - 3.55 * walktime);
+			RL(i, 5) = RL(i, 5) - Support_Leg_Compensation1(time - 3.55 * walktime);
+		}
+		else if (3.65 * walktime < time && time < 3.85 * walktime)
+		{
+			RL(i, 1) = RL(i, 1) - 6 * deg2rad;
+			RL(i, 5) = RL(i, 5) - 6 * deg2rad;
+		}
+		else if (3.85 * walktime < time && time < 3.95 * walktime)
+		{
+			RL(i, 1) = RL(i, 1) - Support_Leg_Compensation2(time - 3.85 * walktime);
+			RL(i, 5) = RL(i, 5) - Support_Leg_Compensation2(time - 3.85 * walktime);
+		}
+	}
+	return RL;
+}
+
+MatrixXd Motions::LL_Angle_Compensation(MatrixXd LL)
+{
+		Foot equationsolver;
+		this->Compensation_Support_Leg1 = equationsolver.Equation_solver(0, walktime * 0.1, 0, 3.607 * deg2rad);
+		this->Compensation_Support_Leg2 = equationsolver.Equation_solver(0, walktime * 0.1, 3.607 * deg2rad, 0);
+		this->Compensation_Swing_Leg1 = equationsolver.Equation_solver(0, walktime * 0.1, 0, 5.058 * deg2rad);
+		this->Compensation_Swing_Leg2 = equationsolver.Equation_solver(0, walktime * 0.1, 5.058 * deg2rad, 0);
+
+		for (int i = 0; i < sim_n; i++)
+		{
+		double time = i * del_t;
+
+		if (1.05 * walktime < time && time < 1.15 * walktime)//swing
+		{
+			LL(i, 1) = LL(i, 1) + Support_Leg_Compensation1(time-1.05*walktime);
+			LL(i, 5) = LL(i, 5) + Support_Leg_Compensation1(time-1.05*walktime);
+		}
+		else if (1.15 * walktime < time && time < 1.35 * walktime)
+		{
+			LL(i, 1) = LL(i, 1) + 3.607 * deg2rad;
+			LL(i, 5) = LL(i, 5) + 3.607 * deg2rad;
+		}
+		else if (1.35 * walktime < time && time < 1.45 * walktime)
+		{
+			LL(i, 1) = LL(i, 1) + Support_Leg_Compensation2(time-1.35*walktime);
+			LL(i, 5) = LL(i, 5) + Support_Leg_Compensation2(time-1.35*walktime);
+		}
+
+		else if (1.55 * walktime < time && time < 1.65 * walktime)//support
+		{
+			LL(i, 1) = LL(i, 1) + Swing_Leg_Compensation1(time-1.55*walktime);
+		}
+		else if (1.65 * walktime < time && time < 1.85 * walktime)//support
+		{
+			LL(i, 1) = LL(i, 1) + 5.058 * deg2rad;
+		}
+		else if (1.85 * walktime < time && time < 1.95 * walktime)//support
+		{
+			LL(i, 1) = LL(i, 1) + Swing_Leg_Compensation2(time-1.85*walktime);
+		}
+
+		else if (2.05 * walktime < time && time < 2.15 * walktime)//swing
+		{
+			LL(i, 1) = LL(i, 1) + Support_Leg_Compensation1(time-2.05*walktime);
+			LL(i, 5) = LL(i, 5) + Support_Leg_Compensation1(time-2.05*walktime);
+		}
+		else if (2.15 * walktime < time && time < 2.35 * walktime)
+		{
+			LL(i, 1) = LL(i, 1) + 3.607 * deg2rad;
+			LL(i, 5) = LL(i, 5) + 3.607 * deg2rad;
+		}
+		else if (2.35 * walktime < time && time < 2.45 * walktime)
+		{
+			LL(i, 1) = LL(i, 1) + Support_Leg_Compensation2(time-2.35*walktime);
+			LL(i, 5) = LL(i, 5) + Support_Leg_Compensation2(time-2.35*walktime);
+		}
+
+		else if (2.55 * walktime < time && time < 2.65 * walktime)//support
+		{
+			LL(i, 1) = LL(i, 1) + Swing_Leg_Compensation1(time-2.55*walktime);
+		}
+		else if (2.65 * walktime < time && time < 2.85 * walktime)//support
+		{
+			LL(i, 1) = LL(i, 1) + 5.058 * deg2rad;
+		}
+		else if (2.85 * walktime < time && time < 2.95 * walktime)//support
+		{
+			LL(i, 1) = LL(i, 1) + Swing_Leg_Compensation2(time-2.85*walktime);
+		}
+
+		else if (3.05 * walktime < time && time < 3.15 * walktime)//swing
+		{
+			LL(i, 1) = LL(i, 1) + Support_Leg_Compensation1(time-3.05*walktime);
+			LL(i, 5) = LL(i, 5) + Support_Leg_Compensation1(time-3.05*walktime);
+		}
+		else if (3.15 * walktime < time && time < 3.35 * walktime)
+		{
+			LL(i, 1) = LL(i, 1) + 3.607 * deg2rad;
+			LL(i, 5) = LL(i, 5) + 3.607 * deg2rad;
+		}
+		else if (3.35 * walktime < time && time < 3.45 * walktime)
+		{
+			LL(i, 1) = LL(i, 1) + Support_Leg_Compensation2(time-3.35*walktime);
+			LL(i, 5) = LL(i, 5) + Support_Leg_Compensation2(time-3.35*walktime);
+		}
+
+		else if (3.55 * walktime < time && time < 3.65 * walktime)//support
+		{
+			LL(i, 1) = LL(i, 1) + Swing_Leg_Compensation1(time-3.55*walktime);
+		}
+		else if (3.65 * walktime < time && time < 3.85 * walktime)//support
+		{
+			LL(i, 1) = LL(i, 1) + 5.058 * deg2rad;
+		}
+		else if (3.85 * walktime < time && time < 3.95 * walktime)//support
+		{
+			LL(i, 1) = LL(i, 1) + Swing_Leg_Compensation2(time-3.85*walktime);
+		}
+		}
+	return LL;
+}
+
+double Motions::Swing_Leg_Compensation1(double t)
+{
+	double X = Compensation_Swing_Leg1(0) + Compensation_Swing_Leg1(1) * t + Compensation_Swing_Leg1(2) * pow(t, 2) + Compensation_Swing_Leg1(3) * pow(t, 3) + Compensation_Swing_Leg1(4) * pow(t, 4) + Compensation_Swing_Leg1(5) * pow(t, 5);
+	return X;
+};
+
+double Motions::Support_Leg_Compensation1(double t)
+{
+	double X = Compensation_Support_Leg1(0) + Compensation_Support_Leg1(1) * t + Compensation_Support_Leg1(2) * pow(t, 2) + Compensation_Support_Leg1(3) * pow(t, 3) + Compensation_Support_Leg1(4) * pow(t, 4) + Compensation_Support_Leg1(5) * pow(t, 5);
+	return X;
+};
+double Motions::Swing_Leg_Compensation2(double t)
+{
+	double X = Compensation_Swing_Leg2(0) + Compensation_Swing_Leg2(1) * t + Compensation_Swing_Leg2(2) * pow(t, 2) + Compensation_Swing_Leg2(3) * pow(t, 3) + Compensation_Swing_Leg2(4) * pow(t, 4) + Compensation_Swing_Leg2(5) * pow(t, 5);
+	return X;
+};
+
+double Motions::Support_Leg_Compensation2(double t)
+{
+	double X = Compensation_Support_Leg2(0) + Compensation_Support_Leg2(1) * t + Compensation_Support_Leg2(2) * pow(t, 2) + Compensation_Support_Leg2(3) * pow(t, 3) + Compensation_Support_Leg2(4) * pow(t, 4) + Compensation_Support_Leg2(5) * pow(t, 5);
+	return X;
+};
+
+void Motions::Motion7() {
+	Foot Foot;
+	Y_Com YCOM;
+	YCOM.Change_Ref_Ypos(0.06, -0.06, 0.06, -0.06, 0.06, -0.06);
+	MatrixXd Ycom = YCOM.YComSimulation();
+	MatrixXd RF_yFoot = -L0 * MatrixXd::Ones(1, sim_n);
+	MatrixXd LF_yFoot = L0 * MatrixXd::Ones(1, sim_n);
+	MatrixXd RF_zFoot = Foot.RF_zsimulation_straightwalk();
+	MatrixXd LF_zFoot = Foot.LF_zsimulation_straightwalk();
+	MatrixXd relativeRFx = MatrixXd::Zero(1, sim_n);
+	MatrixXd relativeLFx = MatrixXd::Zero(1, sim_n);
+	MatrixXd relativeRFy = RF_yFoot - Ycom.block(0, 0, RF_yFoot.rows(), sim_n);
+	MatrixXd relativeLFy = LF_yFoot - Ycom.block(0, 0, LF_yFoot.rows(), sim_n);
+	BRP_Inverse_Kinematics joint;
+	this->Motion7_RL = joint.BRP_RL_Simulation(relativeRFx, relativeRFy, RF_zFoot);
+	this->Motion7_LL = joint.BRP_LL_Simulation(relativeLFx, relativeLFy, LF_zFoot);
+}
+MatrixXd Motions::Return_Motion7_RL() {
+	return Motion7_RL;
+};
+MatrixXd Motions::Return_Motion7_LL() {
+	return Motion7_LL;
+};
 
 

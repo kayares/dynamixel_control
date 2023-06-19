@@ -56,6 +56,10 @@ void Callback::SelectMotion(const std_msgs::Float32Ptr &msg)
     RL_motion = RL_motion6;
     LL_motion = LL_motion6;
     }
+    else if (mode == 7){
+    RL_motion = RL_motion7;
+    LL_motion = LL_motion7;
+    }
     else {
     RL_motion = RL_motion0;
     LL_motion = LL_motion0;
@@ -93,6 +97,10 @@ void Callback::MotionMaker(){
     motion.Motion6();
     LL_motion6 = motion.Return_Motion6_LL();
     RL_motion6 = motion.Return_Motion6_RL();
+
+    motion.Motion7();
+    LL_motion7 = motion.Return_Motion7_LL();
+    RL_motion7 = motion.Return_Motion7_RL();
 
     LL_motion = LL_motion0;
     RL_motion = RL_motion0;
