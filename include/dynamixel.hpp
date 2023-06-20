@@ -8,6 +8,7 @@
 #include <std_msgs/Float64.h> 
 #include "dynamixel_sdk/dynamixel_sdk.h"
 #include <sensor_msgs/JointState.h>
+#include <tf/tf.h>
 // #include <unordered_map> //자료구조 중 더 빠른 map탐색 key:value
 
 
@@ -26,6 +27,9 @@
 #define RAD_TO_VALUE             651.89878   //1rev = 4096 --> 4096/(2*PI)
 #define RAD2DEG                  57.2958
 #define DEG2RAD                  0.0174533
+
+
+
 
 using Eigen::VectorXd;
 
@@ -113,9 +117,8 @@ class Dxl
 {
     //Member Variable
     private:
-        dynamixel::PortHandler* portHandler;
+        dynamixel::PortHandler* portHandler; 
         dynamixel::PacketHandler* packetHandler;
-        
         // const uint8_t dxl_id[NUMBER_OF_DYNAMIXELS] = {1,2,3,4,5,6,7,8,9,10,11,12}; //그냥
         const uint8_t dxl_id[NUMBER_OF_DYNAMIXELS] = {10,8,6,4,2,0,11,9,7,5,3,1}; //로봇
         // const uint8_t dxl_id[NUMBER_OF_DYNAMIXELS] = {10,6,8,4,2,0,11,7,9,5,3,1}; //민섭로봇
@@ -137,7 +140,6 @@ class Dxl
 
         int16_t Mode = 1; // Current = 0, Position = 1
 
-        
         // //Spread Joint command
         // sensor_msgs::JointState joint_state;
         // sensor_msgs::JointState write_msg_;   ///< Stores the last message received from the write command topic
@@ -198,7 +200,7 @@ class Dxl
         virtual void CalculateEstimatedThetaDot(int);
         virtual void initActuatorValues();
         virtual void FSR_flag();
-
+        virtual void Quaternino2RPY();
 };
 
 

@@ -1,33 +1,58 @@
 #include "callback.hpp"
-
+   
+   
+extern Motions motion;
 extern Dxl dxl;
 
-
-Callback::Callback() {
-}
+Callback::Callback() {}
 
 sensor_msgs::JointState joint_state;
 
 void Callback::JointStatesCallback(const sensor_msgs::JointState::ConstPtr &joint_command)
 {
-    for (int i=0; i<NUMBER_OF_DYNAMIXELS;i++)
+    for (int i = 0; i < NUMBER_OF_DYNAMIXELS; i++)
     {
         Goal_joint_[i] = joint_command->position[i];
         dxl.SetThetaRef(Goal_joint_);
-    } 
+    }
 }
 
-
-void Callback::sensorCallback(const std_msgs::Int32ConstPtr &FSR)
+void Callback::FSRsensorCallback(const std_msgs::Int32ConstPtr &FSR)
 {
     fsr_value = FSR->data;
+}
+
+void Callback::IMUsensorCallback(const sensor_msgs::Imu::ConstPtr &IMU)
+{
+    // ROS_INFO("Accel: %.3f,%.3f,%.3f [m/s^2] - Ang. vel: %.3f,%.3f,%.3f [deg/sec] - Orient. Quat: %.3f,%.3f,%.3f,%.3f",
+    //  IMU->linear_acceleration.x, IMU->linear_acceleration.y, IMU->linear_acceleration.z,
+    //  IMU->angular_velocity.x, IMU->angular_velocity.y, IMU->angular_velocity.z,
+    //  IMU->orientation.x, IMU->orientation.y, IMU->orientation.z, IMU->orientation.w);
+    IMU->linear_acceleration.x, IMU->linear_acceleration.y, IMU->linear_acceleration.z,
+        IMU->angular_velocity.x, IMU->angular_velocity.y, IMU->angular_velocity.z,
+        IMU->orientation.x, IMU->orientation.y, IMU->orientation.z, IMU->orientation.w;
+    
+    Accel(0) = IMU->linear_acceleration.x;
+    Accel(1) = IMU->linear_acceleration.y;
+    Accel(2) = IMU->linear_acceleration.z;
+
+    Gyro(0) = IMU->angular_velocity.x;
+    Gyro(1) = IMU->angular_velocity.y;
+    Gyro(2) = IMU->angular_velocity.z;
+
+
+    quaternion(0) = IMU->orientation.x;
+    quaternion(1) = IMU->orientation.y;
+    quaternion(2) = IMU->orientation.z;
+    quaternion(3) = IMU->orientation.w;
+   
 }
 
 
 void Callback::SelectMotion(const std_msgs::Float32Ptr &msg)
 {
     mode = msg ->data;
-    ROS_INFO("mode(%f)",mode);
+    // ROS_INFO("mode(%f)",mode);
     if (mode == 0 ){
     RL_motion = RL_motion0;
     LL_motion = LL_motion0;
@@ -69,7 +94,7 @@ void Callback::SelectMotion(const std_msgs::Float32Ptr &msg)
 
 void Callback::MotionMaker(){
     
-    Motions motion;
+
     motion.Motion0();
     LL_motion0 = motion.Return_Motion0_LL();
     RL_motion0 = motion.Return_Motion0_RL();
