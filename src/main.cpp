@@ -75,41 +75,44 @@ int main(int argc, char **argv)
         A[9] = callback.LL_motion(indext, 3) - 24.58 * DEG2RAD;
         A[10] = callback.LL_motion(indext, 4) - 24.22 * DEG2RAD;
         A[11] = -callback.LL_motion(indext, 5);
-        if (indext > simt * 1.74 && indext < simt * 1.75 && callback.fsr_value < 3)
-        {
-            indext = indext;
-        }
-        else if (indext > simt * 2.74 && indext < simt * 2.75 && callback.fsr_value < 3)
-        {
-            indext = indext;
-        }
-        else if (indext > simt * 3.74 && indext < simt * 3.75 && callback.fsr_value < 3)
-        {
-            indext = indext;
-        }
-        else if (indext > simt * 1.24 && indext < simt * 1.25 && callback.fsr_value < 3)
-        {
-            indext = indext;
-        }
-        else if (indext > simt * 2.24 && indext < simt * 2.25 && callback.fsr_value < 3)
-        {
-            indext = indext;
-        }
-        else if (indext > simt * 3.24 && indext < simt * 3.25 && callback.fsr_value < 3)
-        {
-            indext = indext;
-        }
-        else
-        {
-            indext += 1;
-        }
+        // if (indext > simt * 1.74 && indext < simt * 1.75 && callback.fsr_value < 3)
+        // {
+        //     indext = indext;
+        // }
+        // else if (indext > simt * 2.74 && indext < simt * 2.75 && callback.fsr_value < 3)
+        // {
+        //     indext = indext;
+        // }
+        // else if (indext > simt * 3.74 && indext < simt * 3.75 && callback.fsr_value < 3)
+        // {
+        //     indext = indext;
+        // }
+        // else if (indext > simt * 1.24 && indext < simt * 1.25 && callback.fsr_value < 3)
+        // {
+        //     indext = indext;
+        // }
+        // else if (indext > simt * 2.24 && indext < simt * 2.25 && callback.fsr_value < 3)
+        // {
+        //     indext = indext;
+        // }
+        // else if (indext > simt * 3.24 && indext < simt * 3.25 && callback.fsr_value < 3)
+        // {
+        //     indext = indext;
+        // }
+        // else
+        // {
+        //     indext += 1;
+        // }
+        // if (indext >= callback.RL_motion.rows() - 1)
+        // {
+        //     if (callback.fsr_value > 1)
+        //         indext = 0;
+        //     else
+        //         indext = indext - 1;
+        // }
+        indext += 1;
         if (indext >= callback.RL_motion.rows() - 1)
-        {
-            if (callback.fsr_value > 1)
-                indext = 0;
-            else
-                indext = indext - 1;
-        }
+        { indext = 0;}
         dxl.SetThetaRef(A);
         dxl.syncWriteTheta();
 
