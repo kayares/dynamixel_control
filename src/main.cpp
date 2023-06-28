@@ -17,7 +17,7 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "daynmixel_current_2port");
     ros::Time::init();
-    ros::Rate loop_rate(300);
+    ros::Rate loop_rate(500);
     ros::NodeHandle nh;
     Sensor sensor;
 
@@ -51,7 +51,7 @@ int main(int argc, char **argv)
 
     double walkfreq = 1.48114;
     double walktime = 2 / walkfreq;
-    int freq = 300;
+    int freq = 500;
     int simt = walktime * freq;
     double sim_time = 5 * walktime;
     int sim_n = sim_time * freq;
@@ -61,7 +61,7 @@ int main(int argc, char **argv)
     callback.MotionMaker();
 
     while (ros::ok())
-    {
+    {   
         // About motion
         // indext = 506;
         //  indext = 709;

@@ -8,7 +8,7 @@ using namespace std;
 Com::Com()
 {
 	walkfreq = 1.48114;
-	walktime = 1 / walkfreq;
+	walktime = 2 / walkfreq;
 	stride = 0.1;
 	freq = 500;
 	del_t = 1 / freq;
@@ -244,7 +244,7 @@ Foot::Foot() {
 	walkfreq = 1.48114;
 	walktime = 2 / walkfreq;
 	step = 0.1;
-	freq = 300;
+	freq = 500;
 	XStep << 0, 0, 0, 0, 0, 0;
 	XStride << 0, 0, 0, 0, 0, 0;
 };
@@ -748,7 +748,7 @@ BRP_Inverse_Kinematics::BRP_Inverse_Kinematics() {
 	walkfreq = 1.48114;
 	walktime = 2 / walkfreq;
 	stride = 0.1;
-	freq = 300;
+	freq = 500;
 	del_t = 1 / freq;
 	sim_time = 5 * walktime;
 	sim_n = sim_time * freq;
@@ -1256,7 +1256,7 @@ Motions::Motions() {
 	walkfreq = 1.48114;
 	walktime = 2 / walkfreq;
 	stride = 0.1;
-	freq = 300;
+	freq = 500;
 	del_t = 1 / freq;
 	sim_time = 5 * walktime;
 	sim_n = sim_time * freq;
