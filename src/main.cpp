@@ -28,13 +28,17 @@ int main(int argc, char **argv)
     //  imu_accel = fopen("/home/woojin/imu_Accel_0613_(1).dat", "w");
     //  imu_gyro = fopen("/home/woojin/imu_gyro1_0613_(1).dat", "w");
 
-    ros::Publisher joint_state_publisher_; ///< Publishes joint states from reads   // About motion
+    ros::Publisher joint_state_publisher_; ///< Publishes joint states from reads
+    joint_state_publisher_ = nh.advertise<sensor_msgs::JointState>("KWJ_joint_states", 100);
 
     ros::Subscriber joint_state_subscriber_; ///< Gets joint states for writes
     joint_state_subscriber_ = nh.subscribe("KWJ_desired_joint_states", 1000, &Callback::JointStatesCallback, &callback);
 
-    ros::Subscriber FSR_sensor_subscriber_; ///< Gets FSR Sensor data from Arduino FSR
-    FSR_sensor_subscriber_ = nh.subscribe("FSR", 1000, &Callback::FSRsensorCallback, &callback);
+    ros::Subscriber FSR_L_sensor_subscriber_; ///< Gets FSR Sensor data from Arduino FSR_L
+    FSR_L_sensor_subscriber_ = nh.subscribe("FSR_L", 1000, &Callback::FSRsensorCallback, &callback);
+
+    ros::Subscriber FSR_R_sensor_subscriber_; ///< Gets FSR Sensor data from Arduino FSR_R
+    FSR_R_sensor_subscriber_ = nh.subscribe("FSR_R", 1000, &Callback::FSRsensorCallback, &callback);
 
     ros::Subscriber IMU_sensor_subscriber_; ///< Gets IMU Sensor data from XSENSE mti_driver_node
     IMU_sensor_subscriber_ = nh.subscribe("/imu/data", 1000, &Callback::IMUsensorCallback, &callback);
@@ -61,8 +65,6 @@ int main(int argc, char **argv)
         // About motion
         // indext = 506;
         //  indext = 709;
-
-        std::cout << callback.fsr_value << std::endl;
         A[0] = callback.RL_motion(indext, 0);
         A[1] = callback.RL_motion(indext, 1) - 2 * DEG2RAD;
         A[2] = callback.RL_motion(indext, 2) - 24.22 * DEG2RAD;
@@ -75,44 +77,44 @@ int main(int argc, char **argv)
         A[9] = callback.LL_motion(indext, 3) - 24.58 * DEG2RAD;
         A[10] = callback.LL_motion(indext, 4) - 24.22 * DEG2RAD;
         A[11] = -callback.LL_motion(indext, 5);
-        // if (indext > simt * 1.74 && indext < simt * 1.75 && callback.fsr_value < 3)
-        // {
-        //     indext = indext;
-        // }
-        // else if (indext > simt * 2.74 && indext < simt * 2.75 && callback.fsr_value < 3)
-        // {
-        //     indext = indext;
-        // }
-        // else if (indext > simt * 3.74 && indext < simt * 3.75 && callback.fsr_value < 3)
-        // {
-        //     indext = indext;
-        // }
-        // else if (indext > simt * 1.24 && indext < simt * 1.25 && callback.fsr_value < 3)
-        // {
-        //     indext = indext;
-        // }
-        // else if (indext > simt * 2.24 && indext < simt * 2.25 && callback.fsr_value < 3)
-        // {
-        //     indext = indext;
-        // }
-        // else if (indext > simt * 3.24 && indext < simt * 3.25 && callback.fsr_value < 3)
-        // {
-        //     indext = indext;
-        // }
-        // else
-        // {
-        //     indext += 1;
-        // }
-        // if (indext >= callback.RL_motion.rows() - 1)
-        // {
-        //     if (callback.fsr_value > 1)
-        //         indext = 0;
-        //     else
-        //         indext = indext - 1;
-        // }
-        indext += 1;
+        if (indext > simt * 1.74 && indext < simt * 1.75 && callback.R_value < 3)
+        {
+            indext = indext;
+        }
+        else if (indext > simt * 2.74 && indext < simt * 2.75 && callback.R_value < 3)
+        {
+            indext = indext;
+        }
+        else if (indext > simt * 3.74 && indext < simt * 3.75 && callback.R_value < 3)
+        {
+            indext = indext;
+        }
+        else if (indext > simt * 1.24 && indext < simt * 1.25 && callback.L_value < 3)
+        {
+            indext = indext;
+        }
+        else if (indext > simt * 2.24 && indext < simt * 2.25 && callback.L_value < 3)
+        {
+            indext = indext;
+        }
+        else if (indext > simt * 3.24 && indext < simt * 3.25 && callback.L_value < 3)
+        {
+            indext = indext;
+        }
+        else
+        {
+            indext += 1;
+        }
         if (indext >= callback.RL_motion.rows() - 1)
-        { indext = 0;}
+        {
+            if (callback.L_value > 1 && callback.R_value > 1)
+                indext = 0;
+            else
+                indext = indext - 1;
+        }
+        // indext += 1;
+        // if (indext >= callback.RL_motion.rows() - 1)
+        // { indext = 0;}
         dxl.SetThetaRef(A);
         dxl.syncWriteTheta();
 

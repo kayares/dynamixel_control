@@ -1,8 +1,7 @@
 #include "callback.hpp"
-   
-   
-extern Motions motion;
+
 extern Dxl dxl;
+extern Motions motion;
 
 Callback::Callback() {}
 
@@ -17,9 +16,10 @@ void Callback::JointStatesCallback(const sensor_msgs::JointState::ConstPtr &join
     }
 }
 
-void Callback::FSRsensorCallback(const std_msgs::Int32ConstPtr &FSR)
+void Callback::FSRsensorCallback(const std_msgs::UInt8::ConstPtr &FSR)
 {
-    fsr_value = FSR->data;
+    L_value = FSR->data; // Left_foot_FSR
+    R_value = FSR->data; // Right_foot_FSR
 }
 
 void Callback::IMUsensorCallback(const sensor_msgs::Imu::ConstPtr &IMU)
@@ -47,6 +47,7 @@ void Callback::IMUsensorCallback(const sensor_msgs::Imu::ConstPtr &IMU)
     quaternion(3) = IMU->orientation.w;
    
 }
+
 
 
 void Callback::SelectMotion(const std_msgs::Float32Ptr &msg)

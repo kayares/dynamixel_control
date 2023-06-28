@@ -1570,7 +1570,7 @@ MatrixXd Motions::LL_Angle_Compensation(MatrixXd LL)
 		{
 		double time = i * del_t;
 
-		if (1.05 * walktime < time && time < 1.15 * walktime)//swing
+		if (1.05 * walktime < time && time < 1.15 * walktime)//support
 		{
 			LL(i, 1) = LL(i, 1) + Support_Leg_Compensation1(time-1.05*walktime);
 			LL(i, 5) = LL(i, 5) + Support_Leg_Compensation1(time-1.05*walktime);
@@ -1586,15 +1586,15 @@ MatrixXd Motions::LL_Angle_Compensation(MatrixXd LL)
 			LL(i, 5) = LL(i, 5) + Support_Leg_Compensation2(time-1.35*walktime);
 		}
 
-		else if (1.55 * walktime < time && time < 1.65 * walktime)//support
+		else if (1.55 * walktime < time && time < 1.65 * walktime)//swing
 		{
 			LL(i, 1) = LL(i, 1) + Swing_Leg_Compensation1(time-1.55*walktime);
 		}
-		else if (1.65 * walktime < time && time < 1.85 * walktime)//support
+		else if (1.65 * walktime < time && time < 1.85 * walktime)//swing
 		{
 			LL(i, 1) = LL(i, 1) + 5.058 * deg2rad;
 		}
-		else if (1.85 * walktime < time && time < 1.95 * walktime)//support
+		else if (1.85 * walktime < time && time < 1.95 * walktime)//swing
 		{
 			LL(i, 1) = LL(i, 1) + Swing_Leg_Compensation2(time-1.85*walktime);
 		}
