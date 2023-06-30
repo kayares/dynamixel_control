@@ -3,7 +3,9 @@
 extern Dxl dxl;
 extern Motions motion;
 
-Callback::Callback() {}
+Callback::Callback() {
+
+}
 
 sensor_msgs::JointState joint_state;
 
@@ -48,12 +50,11 @@ void Callback::IMUsensorCallback(const sensor_msgs::Imu::ConstPtr &IMU)
    
 }
 
-
-
 void Callback::SelectMotion(const std_msgs::Float32Ptr &msg)
 {
     mode = msg ->data;
     // ROS_INFO("mode(%f)",mode);
+    if (indext = 0){
     if (mode == 0 ){
     RL_motion = RL_motion0;
     LL_motion = LL_motion0;
@@ -90,8 +91,8 @@ void Callback::SelectMotion(const std_msgs::Float32Ptr &msg)
     RL_motion = RL_motion0;
     LL_motion = LL_motion0;
     }
+    }
 }
-
 
 void Callback::MotionMaker(){
     
@@ -132,4 +133,77 @@ void Callback::MotionMaker(){
     RL_motion = RL_motion0;
 
 
+}
+
+void Callback::Write_Leg_Theta()
+{
+    All_Theta[0] = RL_motion(indext, 0); //Right Waist
+    All_Theta[1] = RL_motion(indext, 1) - 2 * DEG2RAD;//Left Waist
+    All_Theta[2] = RL_motion(indext, 2) - 24.22 * DEG2RAD;//Right Waist
+    All_Theta[3] = RL_motion(indext, 3) + 24.58 * DEG2RAD;//Left
+    All_Theta[4] = RL_motion(indext, 4) + 24.22 * DEG2RAD;
+    All_Theta[5] = RL_motion(indext, 5);
+    All_Theta[6] = LL_motion(indext, 0);
+    All_Theta[7] = LL_motion(indext, 1);
+    All_Theta[8] = LL_motion(indext, 2) + 24.22 * DEG2RAD;
+    All_Theta[9] = LL_motion(indext, 3) - 24.58 * DEG2RAD;
+    All_Theta[10] = LL_motion(indext, 4) - 24.22 * DEG2RAD;
+    All_Theta[11] = LL_motion(indext, 5);
+    if (indext > simt * 1.74 && indext < simt * 1.75 && R_value < 3)
+    {
+    indext = indext;
+    }
+    else if (indext > simt * 2.74 && indext < simt * 2.75 && R_value < 3)
+    {
+    indext = indext;
+    }
+    else if (indext > simt * 3.74 && indext < simt * 3.75 && R_value < 3)
+    {
+    indext = indext;
+    }
+    else if (indext > simt * 1.24 && indext < simt * 1.25 && L_value < 3)
+    {
+    indext = indext;
+    }
+    else if (indext > simt * 2.24 && indext < simt * 2.25 && L_value < 3)
+    {
+    indext = indext;
+    }
+    else if (indext > simt * 3.24 && indext < simt * 3.25 && L_value < 3)
+    {
+    indext = indext;
+    }
+    else
+    {
+    indext += 1;
+    }
+    // if (indext >= RL_motion.rows() - 1)
+    // {
+    //     if (L_value > 1 && R_value > 1)
+    //         indext = 0
+    //          RL_motion = RL_motion0;
+    //          LL_motion = LL_motion0;;
+    //     else
+    //         indext = indext - 1;
+    // }
+    indext += 1;
+    if (indext >= RL_motion.rows() - 1)
+    {
+    indext = 0;
+    RL_motion = RL_motion0;
+    LL_motion = LL_motion0;
+    }
+}
+
+void Callback::Write_Arm_Tehta(){
+    All_Theta[12] = 0; // 허리
+    All_Theta[13] = 90 * DEG2RAD;
+    All_Theta[14] = -90 * DEG2RAD;
+    All_Theta[15] = 60 * DEG2RAD;
+    All_Theta[16] = -60 * DEG2RAD;
+    All_Theta[17] = -90 * DEG2RAD;
+    All_Theta[18] = 90 * DEG2RAD;
+    All_Theta[19] = 90 * DEG2RAD;
+    All_Theta[20] = 0 * DEG2RAD;
+    All_Theta[21] = 0 * DEG2RAD;
 }

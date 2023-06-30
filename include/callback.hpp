@@ -28,6 +28,8 @@ public:
   virtual void IMUsensorCallback(const sensor_msgs::Imu::ConstPtr &IMU);
   virtual void SelectMotion(const std_msgs::Float32Ptr &msg);
   virtual void MotionMaker();
+  virtual void Write_Leg_Theta();
+  virtual void Write_Arm_Tehta();
   //Variable
   VectorXd Goal_joint_ = VectorXd::Zero(NUMBER_OF_DYNAMIXELS);
   uint8_t L_value = 0;
@@ -38,6 +40,14 @@ public:
   VectorXd Accel = VectorXd::Zero(3); // Accel_x, Accel_y, Accel_z 
   VectorXd Gyro = VectorXd::Zero(3); // Gyro_x, Gyro_y, Gyro_z 
   float mode = 0;
+  int indext = 0;
+  double walkfreq = 1.48114;
+  double walktime = 2 / walkfreq;
+  int freq = 500;
+  int simt = walktime * freq;
+  double sim_time = 5 * walktime;
+  int sim_n = sim_time * freq;
+  int indext = 0;
   MatrixXd RL_motion;
   MatrixXd LL_motion;
   MatrixXd RL_motion0;
@@ -56,6 +66,7 @@ public:
   MatrixXd LL_motion6;
   MatrixXd RL_motion7;
   MatrixXd LL_motion7;
+  VectorXd All_Theta =  MatrixXd::Zero(NUMBER_OF_DYNAMIXELS,1);
 
   // tf2::Quaternion quaternion;
   
