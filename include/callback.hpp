@@ -40,7 +40,6 @@ public:
   VectorXd Accel = VectorXd::Zero(3); // Accel_x, Accel_y, Accel_z 
   VectorXd Gyro = VectorXd::Zero(3); // Gyro_x, Gyro_y, Gyro_z 
   float mode = 0;
-  int indext = 0;
   double walkfreq = 1.48114;
   double walktime = 2 / walkfreq;
   int freq = 500;
