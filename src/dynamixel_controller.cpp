@@ -74,4 +74,3 @@ void Dxl_Controller::SetPosition(VectorXd theta)
     }
     dxl.SetThetaRef(th_cont);
 }
-

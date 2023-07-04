@@ -150,33 +150,21 @@ void Callback::MotionMaker(){
 
 }
 
-void Callback::Write_Leg_Theta()
-{
-    All_Theta[0] = LL_motion(indext, 0); //Right Waist
-    All_Theta[1] = LL_motion(indext, 1) - 2 * DEG2RAD;//Left Waist
-    All_Theta[2] = LL_motion(indext, 2) - 10.74 * DEG2RAD;//Right Waist
-    All_Theta[3] = -LL_motion(indext, 3) + 16.58 * DEG2RAD;//Left
-    All_Theta[4] = -LL_motion(indext, 4) + 24.22 * DEG2RAD;
-    All_Theta[5] = LL_motion(indext, 5);
-    All_Theta[6] = RL_motion(indext, 0);
-    All_Theta[7] = RL_motion(indext, 1);
-    All_Theta[8] = -RL_motion(indext, 2) + 10.74 * DEG2RAD;
-    All_Theta[9] = RL_motion(indext, 3) - 16.58 * DEG2RAD;
-    All_Theta[10] = RL_motion(indext, 4) - 24.22 * DEG2RAD;
-    All_Theta[11] = RL_motion(indext, 5);
+void Callback::Write_Leg_Theta(){
+
     ////////////////////////////////////////////////////////////////////
-    // All_Theta[0] = RL_motion(indext, 0); //Right Waist
-    // All_Theta[1] = RL_motion(indext, 1) - 2 * DEG2RAD;//Left Waist
-    // All_Theta[2] = RL_motion(indext, 2) - 24.22 * DEG2RAD;//Right Waist
-    // All_Theta[3] = -RL_motion(indext, 3) + 24.58 * DEG2RAD;//Left
-    // All_Theta[4] = -RL_motion(indext, 4) + 24.22 * DEG2RAD;
-    // All_Theta[5] = RL_motion(indext, 5);
-    // All_Theta[6] = LL_motion(indext, 0);
-    // All_Theta[7] = LL_motion(indext, 1);
-    // All_Theta[8] = -LL_motion(indext, 2) + 24.22 * DEG2RAD;
-    // All_Theta[9] = LL_motion(indext, 3) - 24.58 * DEG2RAD;
-    // All_Theta[10] = LL_motion(indext, 4) - 24.22 * DEG2RAD;
-    // All_Theta[11] = LL_motion(indext, 5);
+    All_Theta[0] = RL_motion(indext, 0); //Right Waist
+    All_Theta[1] = RL_motion(indext, 1) - 2 * DEG2RAD;//Left Waist
+    All_Theta[2] = RL_motion(indext, 2) -  10.74 * DEG2RAD;//Right Waist
+    All_Theta[3] = -RL_motion(indext, 3) + 38.34 * DEG2RAD;//Left
+    All_Theta[4] = -RL_motion(indext, 4) +24.22 * DEG2RAD;
+    All_Theta[5] = -RL_motion(indext, 5);
+    All_Theta[6] = LL_motion(indext, 0);
+    All_Theta[7] = LL_motion(indext, 1);
+    All_Theta[8] = -LL_motion(indext, 2) +  10.74 * DEG2RAD;
+    All_Theta[9] = LL_motion(indext, 3) - 38.34 * DEG2RAD;
+    All_Theta[10] = LL_motion(indext, 4) - 24.22 * DEG2RAD;
+    All_Theta[11] = -LL_motion(indext, 5);
     // if (indext > simt * 1.74 && indext < simt * 1.75 && R_value < 3)
     // {
     // indext = indext;
@@ -214,7 +202,9 @@ void Callback::Write_Leg_Theta()
     //     else
     //         indext = indext - 1;
     // }
-    indext += 1;
+       indext = 843;
+    // indext = 1181;
+    // indext += 1;
     if (indext >= RL_motion.rows() - 1)
     {
     indext = 0;
@@ -223,12 +213,12 @@ void Callback::Write_Leg_Theta()
     }
 }
 
-void Callback::Write_Arm_Tehta(){
+void Callback::Write_Arm_Theta(){
     All_Theta[12] = 0; // 허리
     All_Theta[13] = -90 * DEG2RAD;
     All_Theta[14] = 90 * DEG2RAD;
-    All_Theta[15] = 60 * DEG2RAD;
-    All_Theta[16] = -60 * DEG2RAD;
+    All_Theta[15] = -60 * DEG2RAD;
+    All_Theta[16] = 60 * DEG2RAD;
     All_Theta[17] = -90 * DEG2RAD;
     All_Theta[18] = 90 * DEG2RAD;
     All_Theta[19] = 0 * DEG2RAD;

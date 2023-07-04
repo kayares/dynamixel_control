@@ -166,10 +166,13 @@ private:
     MatrixXd Motion6_LL;
     MatrixXd Motion7_RL;
     MatrixXd Motion7_LL;
-    Matrix<double, 6, 1> Compensation_Support_Leg1;
-    Matrix<double, 6, 1> Compensation_Support_Leg2;
-    Matrix<double, 6, 1> Compensation_Swing_Leg1;
-    Matrix<double, 6, 1> Compensation_Swing_Leg2;
+    Matrix<double, 6, 1> Compensation_Support_Leg_up;
+    Matrix<double, 6, 1> Compensation_Support_Leg_down;
+    Matrix<double, 6, 1> Compensation_Swing_Leg_up;
+    Matrix<double, 6, 1> Compensation_Swing_Leg_down;
+    Matrix<double, 6, 1> Compensation_Support_knee_up;
+    Matrix<double, 6, 1> Compensation_Support_knee_down;
+
     double L0 = 0.06;
     double walkfreq;
     double walktime;
@@ -211,8 +214,10 @@ public:
 
     MatrixXd RL_Angle_Compensation(MatrixXd RL);
     MatrixXd LL_Angle_Compensation(MatrixXd LL);
-    double Swing_Leg_Compensation1(double t);
-    double Swing_Leg_Compensation2(double t);
-    double Support_Leg_Compensation1(double t);
-    double Support_Leg_Compensation2(double t);
+    double Swing_Leg_Compensation_up(double t);
+    double Swing_Leg_Compensation_down(double t);
+    double Support_Leg_Compensation_up(double t);
+    double Support_Leg_Compensation_down(double t);
+    double Support_Knee_Compensation_up(double t);
+    double Support_Knee_Compensation_down(double t);
 };

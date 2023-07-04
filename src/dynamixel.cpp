@@ -347,8 +347,8 @@ void Dxl::Quaternino2RPY()
         callback.quaternion(3));
     tf::Matrix3x3 m(q);
     m.getRPY(callback.RPY(0), callback.RPY(1), callback.RPY(2));
-    // ROS_INFO("roll : %.3f", callback.roll * RAD2DEG);
-    // ROS_INFO("pitch : %.3f", callback.pitch * RAD2DEG);
-    // ROS_INFO("yaw : %.3f", callback.yaw * RAD2DEG);
+    // cout << callback.RPY[0] << endl;
+    // ROS_INFO("roll : %.3f", callback.RPY(0) * RAD2DEG);
+    // ROS_INFO("pitch : %.3f", callback.RPY(1) * RAD2DEG);
+    // ROS_INFO("yaw : %.3f", callback.RPY(2) * RAD2DEG);
 }
-

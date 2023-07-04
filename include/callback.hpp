@@ -29,7 +29,7 @@ public:
   virtual void SelectMotion(const std_msgs::Float32Ptr &msg);
   virtual void MotionMaker();
   virtual void Write_Leg_Theta();
-  virtual void Write_Arm_Tehta();
+  virtual void Write_Arm_Theta();
   //Variable
   VectorXd Goal_joint_ = VectorXd::Zero(NUMBER_OF_DYNAMIXELS);
   uint8_t L_value = 0;

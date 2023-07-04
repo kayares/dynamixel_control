@@ -47,14 +47,11 @@ int main(int argc, char **argv)
     Motion_Selector_ = nh.subscribe("Select_Motion", 1000, &Callback::SelectMotion, &callback);
     // ros::waitForShutdown(); // Multi-threaded spinning
 
-    callback.Write_Arm_Tehta();
+    callback.Write_Arm_Theta();
     callback.MotionMaker();
 
     while (ros::ok())
     {   
-        // About motion
-        // indext = 506;
-        //  indext = 709;
        callback.Write_Leg_Theta();
         dxl.SetThetaRef(callback.All_Theta);
         dxl.syncWriteTheta();
