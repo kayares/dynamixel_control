@@ -66,7 +66,7 @@ public:
   MatrixXd RL_motion7;
   MatrixXd LL_motion7;
   VectorXd All_Theta =  MatrixXd::Zero(NUMBER_OF_DYNAMIXELS,1);
-
+  FILE *file;
   // tf2::Quaternion quaternion;
   
 };

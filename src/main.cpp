@@ -46,13 +46,30 @@ int main(int argc, char **argv)
     ros::Subscriber Motion_Selector_; ///< Gets FSR Sensor data from Arduino FSR
     Motion_Selector_ = nh.subscribe("Select_Motion", 1000, &Callback::SelectMotion, &callback);
     // ros::waitForShutdown(); // Multi-threaded spinning
-
+    FILE *file1 = fopen("/home/jaemin/matlab_codes/dynamixel_theta_data1.dat", "w");
+    FILE *file2 = fopen("/home/jaemin/matlab_codes/dynamixel_theta_data2.dat", "w");
     callback.Write_Arm_Theta();
     callback.MotionMaker();
-
+    for (int i = 0; i<callback.RL_motion3.rows();i++){
+        fprintf(file1,"%d ",i);
+        for (int j = 0; j<6;j++){
+            fprintf(file1,"%lf ",callback.RL_motion3(i,j));
+        }
+        fprintf(file1, "\n");
+    }
+    for (int i = 0; i<callback.LL_motion7.rows();i++){
+        fprintf(file2,"%d ",i);
+        for (int j = 0; j<6;j++){
+            fprintf(file2,"%lf ",callback.RL_motion7(i,j));
+        }
+        fprintf(file2, "\n");
+    }
+    fclose(file1);
+    fclose(file2);
     while (ros::ok())
     {   
        callback.Write_Leg_Theta();
+
         dxl.SetThetaRef(callback.All_Theta);
         dxl.syncWriteTheta();
 

@@ -1501,9 +1501,9 @@ MatrixXd Motions::RL_Angle_Compensation(MatrixXd RL)
 		}
 		else if (1.85 * walktime < time && time < 1.925 * walktime) // support
 		{
-			RL(i, 1) = RL(i, 1) - Support_Leg_Compensation_down(time - 1.65 * walktime);
+			RL(i, 1) = RL(i, 1) - Support_Leg_Compensation_down(time - 1.85 * walktime);
 			// RL(i, 3) = RL(i, 3) - Support_Knee_Compensation_down(time - 1.65 * walktime);
-			RL(i, 5) = RL(i, 5) - Support_Leg_Compensation_down(time - 1.65 * walktime);
+			RL(i, 5) = RL(i, 5) - Support_Leg_Compensation_down(time - 1.85 * walktime);
 		}
 		
 		else if (2.075 * walktime < time && time < 2.15 * walktime)
