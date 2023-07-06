@@ -78,14 +78,15 @@ int main(int argc, char **argv)
             msg.name.push_back(joint_name.at(i));
 
             dxl.syncReadTheta();
+            dxl.GetCurrent();
             msg.position.push_back(dxl.th_[i]);
+            msg.effort.push_back(dxl.cur_[i]);
         }
         joint_state_publisher_.publish(msg);
         callback.Write_Leg_Theta();
         dxl.SetThetaRef(callback.All_Theta);
         dxl.syncWriteTheta();
 
-        cout << dxl.GetCurrent() << endl;
 
         ros::spinOnce();
         loop_rate.sleep();
