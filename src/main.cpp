@@ -28,11 +28,11 @@ int main(int argc, char **argv)
     //  imu_accel = fopen("/home/woojin/imu_Accel_0613_(1).dat", "w");
     //  imu_gyro = fopen("/home/woojin/imu_gyro1_0613_(1).dat", "w");
 
-    // ros::Publisher joint_state_publisher_; ///< Publishes joint states from reads
-    // joint_state_publisher_ = nh.advertise<sensor_msgs::JointState>("KWJ_joint_states", 100);
+    ros::Publisher joint_state_publisher_; ///< Publishes joint states from reads
+    joint_state_publisher_ = nh.advertise<sensor_msgs::JointState>("KWJ_joint_states", 100);
 
-    // ros::Subscriber joint_state_subscriber_; ///< Gets joint states for writes
-    // joint_state_subscriber_ = nh.subscribe("KWJ_desired_joint_states", 1000, &Callback::JointStatesCallback, &callback);
+    ros::Subscriber joint_state_subscriber_; ///< Gets joint states for writes
+    joint_state_subscriber_ = nh.subscribe("KWJ_desired_joint_states", 1000, &Callback::JointStatesCallback, &callback);
 
     // ros::Subscriber FSR_L_sensor_subscriber_; ///< Gets FSR Sensor data from Arduino FSR_L
     // FSR_L_sensor_subscriber_ = nh.subscribe("FSR_L", 1000, &Callback::FSRsensorCallback, &callback);
@@ -68,24 +68,30 @@ int main(int argc, char **argv)
     fclose(file2);
     while (ros::ok())
     {   
-       callback.Write_Leg_Theta();
+        // About joint msg
+        sensor_msgs::JointState msg;
+        msg.header.stamp = ros::Time::now();
+        std::vector<std::string> joint_name = {"j1", "j2", "j3", "j4", "j5", "j6", "j7", "j8", "j9", "j10", "j11", "j12", "j13", "j14", "j15", "j16", "j17", "j18", "j19", "j20", "j21", "j22"};
 
+        for (uint8_t i = 0; i < NUMBER_OF_DYNAMIXELS; i++)
+        {
+            msg.name.push_back(joint_name.at(i));
+
+            dxl.syncReadTheta();
+            msg.position.push_back(dxl.th_[i]);
+        }
+        joint_state_publisher_.publish(msg);
+        callback.Write_Leg_Theta();
         dxl.SetThetaRef(callback.All_Theta);
         dxl.syncWriteTheta();
 
-        // sensor.Publish_Accel_Origin();
-        // sensor.Publish_Gyro_Origin();
-        // sensor.Publish_Accel_HPF();
-        // sensor.Publish_Gyro_LPF();
-        // sensor.Publish_Velocity_HPF_Integral();
-        // sensor.Publish_Velocity_Integral();
-        // sensor.Publish_Velocity_Complementary();
+        cout << dxl.GetCurrent() << endl;
 
         ros::spinOnce();
         loop_rate.sleep();
-}
+    }
 
-// ROS_INFO("daynmixel_current_2port!");
-dxl.~Dxl();
-return 0;
+    // ROS_INFO("daynmixel_current_2port!");
+    dxl.~Dxl();
+    return 0;
 }

@@ -22,23 +22,28 @@ class Callback
 public:
   Callback();
 
-  //Function
+  // Function
   virtual void JointStatesCallback(const sensor_msgs::JointState::ConstPtr &joint_command);
   virtual void FSRsensorCallback(const std_msgs::UInt8::ConstPtr &FSR);
   virtual void IMUsensorCallback(const sensor_msgs::Imu::ConstPtr &IMU);
+  
   virtual void SelectMotion(const std_msgs::Float32Ptr &msg);
   virtual void MotionMaker();
   virtual void Write_Leg_Theta();
   virtual void Write_Arm_Theta();
-  //Variable
+  
+  
+  // Variable
   VectorXd Goal_joint_ = VectorXd::Zero(NUMBER_OF_DYNAMIXELS);
   uint8_t L_value = 0;
   uint8_t R_value = 0;
-  uint8_t fsr_value[2] = {L_value, R_value};    
+  uint8_t fsr_value[2] = {L_value, R_value};
   VectorXd quaternion = VectorXd::Zero(4);
-  VectorXd RPY = VectorXd::Zero(3); //Roll Pitch Yaw
-  VectorXd Accel = VectorXd::Zero(3); // Accel_x, Accel_y, Accel_z 
-  VectorXd Gyro = VectorXd::Zero(3); // Gyro_x, Gyro_y, Gyro_z 
+  VectorXd RPY = VectorXd::Zero(3);   // Roll Pitch Yaw
+  VectorXd Accel = VectorXd::Zero(3); // Accel_x, Accel_y, Accel_z
+  VectorXd Gyro = VectorXd::Zero(3);  // Gyro_x, Gyro_y, Gyro_z
+  
+  
   float mode = 0;
   double walkfreq = 1.48114;
   double walktime = 2 / walkfreq;
@@ -65,10 +70,9 @@ public:
   MatrixXd LL_motion6;
   MatrixXd RL_motion7;
   MatrixXd LL_motion7;
-  VectorXd All_Theta =  MatrixXd::Zero(NUMBER_OF_DYNAMIXELS,1);
-  FILE *file;
+  VectorXd All_Theta = MatrixXd::Zero(NUMBER_OF_DYNAMIXELS, 1);
+
   // tf2::Quaternion quaternion;
-  
 };
 
 #endif // CALLBACK_H

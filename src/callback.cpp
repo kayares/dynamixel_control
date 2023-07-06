@@ -3,9 +3,7 @@
 extern Dxl dxl;
 extern Motions motion;
 
-Callback::Callback() {
-
-}
+Callback::Callback() {}
 
 sensor_msgs::JointState joint_state;
 
@@ -14,7 +12,7 @@ void Callback::JointStatesCallback(const sensor_msgs::JointState::ConstPtr &join
     for (int i = 0; i < NUMBER_OF_DYNAMIXELS; i++)
     {
         Goal_joint_[i] = joint_command->position[i];
-        dxl.SetThetaRef(Goal_joint_);
+        // dxl.SetThetaRef(Goal_joint_);
     }
 }
 
@@ -154,19 +152,22 @@ void Callback::Write_Leg_Theta(){
 
     ////////////////////////////////////////////////////////////////////
     All_Theta[0] = RL_motion(indext, 0); //Right Waist
-    All_Theta[1] = RL_motion(indext, 1) - 2 * DEG2RAD;//Left Waist
-    All_Theta[2] = RL_motion(indext, 2) -  10.74 * DEG2RAD;//Right Waist
-    All_Theta[3] = -RL_motion(indext, 3) + 38.34 * DEG2RAD;//Left
-    All_Theta[4] = -RL_motion(indext, 4) +24.22 * DEG2RAD;
+    All_Theta[1] = RL_motion(indext, 1) - 2 * DEG2RAD ;//Left Waist
+    All_Theta[2] = RL_motion(indext, 2) -  10.74 * DEG2RAD ;//Right Waist
+    All_Theta[3] = -RL_motion(indext, 3) + 38.34 * DEG2RAD ;//Left
+    All_Theta[4] = -RL_motion(indext, 4) +24.22 * DEG2RAD ;
     All_Theta[5] = -RL_motion(indext, 5);
-    All_Theta[6] = LL_motion(indext, 0);
-    All_Theta[7] = LL_motion(indext, 1);
+    All_Theta[6] = LL_motion(indext, 0) ;
+    All_Theta[7] = LL_motion(indext, 1) + 2 * DEG2RAD;
     All_Theta[8] = -LL_motion(indext, 2) +  10.74 * DEG2RAD;
-    All_Theta[9] = LL_motion(indext, 3) - 38.34 * DEG2RAD;
-    All_Theta[10] = LL_motion(indext, 4) - 24.22 * DEG2RAD;
+    All_Theta[9] = LL_motion(indext, 3) - 38.34 * DEG2RAD ;
+    All_Theta[10] = LL_motion(indext, 4) - 24.22 * DEG2RAD ;
     All_Theta[11] = -LL_motion(indext, 5);
+    for (int i=0; i<12;i++){
+        All_Theta[i] = All_Theta[i] + Goal_joint_[i]*DEG2RAD;
+    }
     // if (indext > simt * 1.74 && indext < simt * 1.75 && R_value < 3)
-    // {
+    // {a
     // indext = indext;
     // }
     // else if (indext > simt * 2.74 && indext < simt * 2.75 && R_value < 3)
@@ -202,9 +203,9 @@ void Callback::Write_Leg_Theta(){
     //     else
     //         indext = indext - 1;
     // }
-       indext = 843;
+    //    indext = 843;
     // indext = 1181;
-    // indext += 1;
+    indext += 1;
     if (indext >= RL_motion.rows() - 1)
     {
     indext = 0;
@@ -224,3 +225,4 @@ void Callback::Write_Arm_Theta(){
     All_Theta[19] = 0 * DEG2RAD;
     All_Theta[20] = 0 * DEG2RAD;
 }
+
