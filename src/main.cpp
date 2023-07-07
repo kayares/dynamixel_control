@@ -21,8 +21,8 @@ int main(int argc, char **argv)
     ros::NodeHandle nh;
     Sensor sensor;
 
-    ros::AsyncSpinner spinner(0); // Multi-threaded spinning
-    spinner.start();              // Multi-threaded spinning
+    // ros::AsyncSpinner spinner(0); // Multi-threaded spinning
+    // spinner.start();              // Multi-threaded spinning
 
     // IMU
     //  imu_accel = fopen("/home/woojin/imu_Accel_0613_(1).dat", "w");

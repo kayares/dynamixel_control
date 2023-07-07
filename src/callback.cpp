@@ -151,17 +151,17 @@ void Callback::MotionMaker(){
 void Callback::Write_Leg_Theta(){
 
     ////////////////////////////////////////////////////////////////////
-    All_Theta[0] = RL_motion(indext, 0); //Right Waist
-    All_Theta[1] = RL_motion(indext, 1) - 2 * DEG2RAD ;//Left Waist
+    All_Theta[0] = RL_motion(indext, 0) - 2 * DEG2RAD; //Right Waist
+    All_Theta[1] = RL_motion(indext, 1) + 1 * DEG2RAD;//Left Waist
     All_Theta[2] = RL_motion(indext, 2) -  10.74 * DEG2RAD ;//Right Waist
     All_Theta[3] = -RL_motion(indext, 3) + 38.34 * DEG2RAD ;//Left
     All_Theta[4] = -RL_motion(indext, 4) +24.22 * DEG2RAD ;
     All_Theta[5] = -RL_motion(indext, 5);
-    All_Theta[6] = LL_motion(indext, 0) ;
-    All_Theta[7] = LL_motion(indext, 1) + 2 * DEG2RAD;
-    All_Theta[8] = -LL_motion(indext, 2) +  10.74 * DEG2RAD;
-    All_Theta[9] = LL_motion(indext, 3) - 38.34 * DEG2RAD ;
-    All_Theta[10] = LL_motion(indext, 4) - 24.22 * DEG2RAD ;
+    All_Theta[6] = LL_motion(indext, 0) + 1* DEG2RAD;
+    All_Theta[7] = LL_motion(indext, 1) ;
+    All_Theta[8] = -LL_motion(indext, 2) +  8.74 * DEG2RAD;
+    All_Theta[9] = LL_motion(indext, 3) - 36.34 * DEG2RAD ;
+    All_Theta[10] = LL_motion(indext, 4) - 26.22 * DEG2RAD ;
     All_Theta[11] = -LL_motion(indext, 5);
     for (int i=0; i<12;i++){
         All_Theta[i] = All_Theta[i] + Goal_joint_[i]*DEG2RAD;
@@ -204,8 +204,8 @@ void Callback::Write_Leg_Theta(){
     //         indext = indext - 1;
     // }
     //    indext = 843;
-    // indext = 1181;
-    indext += 1;
+    indext = 1181;
+    // indext += 1;
     if (indext >= RL_motion.rows() - 1)
     {
     indext = 0;

@@ -1456,8 +1456,8 @@ MatrixXd Motions::Return_Motion6_LL() {
 
 MatrixXd Motions::RL_Angle_Compensation(MatrixXd RL)
 {
-	double Support_Leg_deg =8 * deg2rad;
-	double Swing_Leg_deg = 11.058 * deg2rad;
+	double Support_Leg_deg =0;//8 * deg2rad;
+	double Swing_Leg_deg = 3* deg2rad;//11.058 * deg2rad;
 	double Support_Knee_deg = 7.607 * deg2rad;
 
 	Foot equationsolver;
@@ -1576,8 +1576,8 @@ MatrixXd Motions::RL_Angle_Compensation(MatrixXd RL)
 MatrixXd Motions::LL_Angle_Compensation(MatrixXd LL)
 {
 
-	double Support_Leg_deg = 7.607 * deg2rad;
-	double Swing_Leg_deg = 6.058 * deg2rad;
+	double Support_Leg_deg = 0;//7.607 * deg2rad;
+	double Swing_Leg_deg = 3* deg2rad;//6.058 * deg2rad;
 	double Support_Knee_deg = 7.607 * deg2rad;
 
 	Foot equationsolver;
