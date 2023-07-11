@@ -10,9 +10,12 @@ Com::Com()
 	walkfreq = 1.48114;
 	walktime = 2 / walkfreq;
 	stride = 0.1;
-	freq = 500;
+	freq = 100;
 	del_t = 1 / freq;
-	z_c = 1.2 * 0.30583;
+	z_c = 1.2*0.28224;
+	g = 9.81;
+	del_t = 1 / freq;
+	z_c = 1.2*0.28224;
 	g = 9.81;
 	T_prev = 1.5;
 	NL = T_prev * freq;
@@ -44,10 +47,10 @@ Com::Com()
 	A_p = Matrix4d::Identity();
 	A_p.block<4, 3>(0, 1) = F_p;
 
-	K_p << 198.633829737069,	19628.3822432368,	3818.23902165455,	4.21279595103775,
-		19628.3822432368,	1989741.22570983,	387263.130714345,	466.908230988326,
-		3818.23902165455,	387263.130714345,	75375.0546442415,	91.2815487187198,
-		4.21279595103775,	466.908230988326,	91.2815487187198,	0.190908542883096;
+	K_p << 39.6705680728965, 767.041701576624, 146.718698235848, 0.783104639644143,
+		767.041701576624, 15757.1102135576, 3020.55041085527, 17.3114186035467,
+		146.718698235848, 3020.55041085527, 579.174316822950, 3.34807191211032,
+		0.783104639644143, 17.3114186035467, 3.34807191211032, 0.0250426729515634;
 
 	Gi = (R + B_p.transpose() * K_p * B_p).inverse() * B_p.transpose() * K_p * I_p;
 	Gx = (R + B_p.transpose() * K_p * B_p).inverse() * B_p.transpose() * K_p * F_p;
@@ -57,10 +60,12 @@ Com::Com()
 MatrixXd Com::PreviewGd()
 {
 	MatrixXd Gd(NL, 1);
-	for (int l = 0; l < NL; l++) {
+	for (int l = 0; l < NL; l++)
+	{
 
 		Matrix4d temp = Ac_p.transpose();
-		for (int i = 1; i < l; i++) {
+		for (int i = 1; i < l; i++)
+		{
 			temp = temp * Ac_p.transpose();
 		}
 		Gd(l, 0) = (R + B_p.transpose() * K_p * B_p).inverse() * B_p.transpose() * temp * K_p * I_p;
@@ -244,7 +249,7 @@ Foot::Foot() {
 	walkfreq = 1.48114;
 	walktime = 2 / walkfreq;
 	step = 0.1;
-	freq = 500;
+	freq = 100;
 	XStep << 0, 0, 0, 0, 0, 0;
 	XStride << 0, 0, 0, 0, 0, 0;
 };
@@ -747,7 +752,7 @@ BRP_Inverse_Kinematics::BRP_Inverse_Kinematics() {
 	walkfreq = 1.48114;
 	walktime = 2 / walkfreq;
 	stride = 0.1;
-	freq = 500;
+	freq = 100;
 	del_t = 1 / freq;
 	sim_time = 5 * walktime;
 	sim_n = sim_time * freq;
@@ -1255,7 +1260,7 @@ Motions::Motions() {
 	walkfreq = 1.48114;
 	walktime = 2 / walkfreq;
 	stride = 0.1;
-	freq = 500;
+	freq = 100;
 	del_t = 1 / freq;
 	sim_time = 5 * walktime;
 	sim_n = sim_time * freq;
