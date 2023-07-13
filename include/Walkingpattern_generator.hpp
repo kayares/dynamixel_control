@@ -214,6 +214,8 @@ public:
 
     MatrixXd RL_Angle_Compensation(MatrixXd RL);
     MatrixXd LL_Angle_Compensation(MatrixXd LL);
+    MatrixXd RL_Angle_Compensation_Leftwalk(MatrixXd RL);
+    MatrixXd LL_Angle_Compensation_Rightwalk(MatrixXd LL);
     double Swing_Leg_Compensation_up(double t);
     double Swing_Leg_Compensation_down(double t);
     double Support_Leg_Compensation_up(double t);
